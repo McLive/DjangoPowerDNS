@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div class="card" style="width:500px;">
+        <h4 class="card-header"><i class="fa fa-lock" aria-hidden="true"></i> {% block title %}Sign In{% endblock %}</h4>
+        <form action="{% url 'login' %}" method=post>
+            <div class="card-body">
+                <div class="login">
+                    <input type="hidden" value="{{ next }}" name="next">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <button id="submit" type="submit" class="btn btn-primary"><i class="fa fa-unlock"></i> Einloggen</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div class="card">
+        <h4 class="card-header">Add Domain</h4>
+        <form action="{% url 'domain-add' %}" method=post>
+            <div class="card-body">
+                <input type="hidden" value="{{ next }}" name="next">
+                {% csrf_token %}
+                {{ form.media }}
+                {% bootstrap_field form.name %}
+            </div>
+            <div class="card-footer">
+                <button id="submit" type="submit" name="submit" class="btn btn-primary">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add Domain
+                </button>
+                <a href="{% url 'domains' %}" class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-times" aria-hidden="true"></i> Cancel</a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

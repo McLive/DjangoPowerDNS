@@ -1,0 +1,524 @@
+{% load staticfiles %}
+{% load activeurl %}
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Django-PowerDNS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap-4.0.0-beta/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Font-Awesome -->
+    <link href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- animate.css -->
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+
+    <!-- SweetAlert -->
+    <link href="{% static 'sweetalert-master/dist/sweetalert.css' %}" type="text/css" rel="stylesheet">
+
+    <!-- Knockout -->
+    <script src="{% static 'js/knockout-3.4.2.js' %}"></script>
+    <script src="{% static 'js/knockout-3.4.2.debug.js' %}"></script>
+
+    <!-- navigo -->
+    <script src="{% static 'js/navigo-226.min.js' %}"></script>
+
+    <!-- SweetAlert -->
+    <script src="{% static 'sweetalert-master/dist/sweetalert.min.js' %}"></script>
+
+    <!-- knockout-validation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.min.js"></script>
+
+
+    <style>
+        body > .container > nav {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1250px;
+        }
+
+        .btn:enabled {
+            cursor: pointer;
+        }
+
+        /*
+            Bootstrap 3 blue color for buttons etc..
+            background-image: linear-gradient(to bottom, #337ab7 0, #265a88 100%)
+         */
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    {% activeurl %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+            <a class="navbar-brand" href="{% url 'index' %}">Django-PowerDNS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample09">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'domains' %}">Domains</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown09">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fa fa-lock" aria-hidden="true"></i> Login</a></li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"
+                                                                                                                                                            aria-hidden="true"></i> {{ user.username }}<span
+                                    class="caret"></span></a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    {% endactiveurl %}
+
+    {% bootstrap_messages %}
+    {% block content %}{% endblock %}
+
+</div> <!-- /container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="{% static 'bootstrap-4.0.0-beta/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+
+{% csrf_token %}
+
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", jQuery("[name=csrfmiddlewaretoken]").val());
+            }
+        }
+    });
+
+    $(function () {
+        var router = new Navigo(root = "/", useHash = false);
+
+        router.on({
+            'domain/:id': function (params) {
+                // populate knockout models
+                //website.id(params.id);
+                //website.loading_columns(true);
+                domainModel.loading_records(true);
+                $.ajax({
+                    type: 'GET',
+                    url: '/domain/' + params.id + '/json/get-records', {#% url 'domain-json-get-records' domain.id %#}
+                    datatype: "json",
+                    contentType: "application/json charset=utf-8",
+                    success: function (data) {
+                        //website.details(data[0].fields);
+                        var modelData = [];
+
+                        json = data['records'];
+                        json.forEach(function (obj) {
+                            modelData.push(new Record(obj.id, obj.name, obj.type, obj.content, obj.prio, obj.ttl))
+                        });
+                        domainModel.records(modelData);
+                        domainModel.domain(data['domain']);
+                        domainModel.domain_id(params.id);
+                    }
+                }).always(function () {
+                    domainModel.loading_records(false);
+                });
+            }
+        }).resolve();
+    });
+
+
+    /*----------------------------------------------------------------------*/
+    /* Custom binding handler for cinfirmable clicks
+    /*----------------------------------------------------------------------*/
+
+    ko.bindingHandlers.confirmClick = {
+        init: function (element, valueAccessor, allBindings, viewModel) {
+            var value = valueAccessor();
+            var message = ko.unwrap(value.message);
+            var click = value.click;
+            ko.applyBindingsToNode(element, {
+                click: function () {
+                    if (confirm(message))
+                        return click.apply(this, Array.prototype.slice.apply(arguments));
+                }
+            }, allBindings);
+        }
+    };
+
+
+    ko.observable.fn.appendError = function (error) {
+        var thisError = this.error();
+        if (thisError) {
+            this.setError(thisError += '. ' + error);
+        }
+        else {
+            this.setError(error)
+        }
+    };
+
+
+    /*----------------------------------------------------------------------*/
+    /* Observable Extention for Editing
+    /*----------------------------------------------------------------------*/
+    ko.extenders.editable = function (target, option) {
+        if (Array.isArray(target()))
+            target.editValue = ko.observableArray(target().slice()).extend({
+                /*required: true*/
+            });
+        else
+            target.editValue = ko.observable(target()).extend({
+                /*required: true*/
+            });
+    };
+
+    ko.observable.fn.beginEdit = function (transaction) {
+
+        var self = this;
+        var commitSubscription,
+            rollbackSubscription;
+
+        self.dispose = function () {
+            // kill this subscriptions
+            commitSubscription.dispose();
+            rollbackSubscription.dispose();
+        };
+
+        self.commit = function () {
+            // update the actual value with the edit value
+            self(self.editValue());
+
+            // dispose the subscriptions
+            self.dispose();
+        };
+
+        self.rollback = function () {
+            // rollback the edit value
+            self.editValue(self());
+
+            // dispose the subscriptions
+            self.dispose();
+        };
+
+        //  subscribe to the transation commit and reject calls
+        commitSubscription = transaction.subscribe(self.commit,
+            self,
+            "commit");
+
+        rollbackSubscription = transaction.subscribe(self.rollback,
+            self,
+            "rollback");
+
+        return self;
+    };
+
+    /*----------------------------------------------------------------------*/
+    /* Item Model
+    /*----------------------------------------------------------------------*/
+
+    function Record(id, name, type, content, prio, ttl) {
+        var self = this;
+        self.id = ko.observable(id);
+        self.name = ko.observable(name).extend({editable: true});
+        self.type = ko.observable(type).extend({editable: true});
+        self.content = ko.observable(content).extend({editable: true});
+        self.prio = ko.observable(prio).extend({editable: true});
+        self.ttl = ko.observable(ttl).extend({editable: true});
+
+        self.saving = ko.observable();
+        self.deleting = ko.observable();
+
+        self.errors = ko.validation.group(self);
+
+        self.validationOptions = {
+            decorateInputElement: true,
+            errorElementClass: 'error-element',
+            errorMessageClass: 'error-message'
+        };
+
+        self.isValid = ko.computed(function () {
+            return self.errors().length == 0;
+        });
+
+    }
+
+    Record.prototype.beginEdit = function (transaction) {
+        this.name.beginEdit(transaction);
+        this.type.beginEdit(transaction);
+        this.content.beginEdit(transaction);
+        this.prio.beginEdit(transaction);
+        this.ttl.beginEdit(transaction);
+    };
+
+
+    /*----------------------------------------------------------------------*/
+    /* View Model
+    /*----------------------------------------------------------------------*/
+    function DomainRecordModel() {
+        var self = this;
+
+        //  data
+        self.availableRecords = [];
+        self.records = ko.observableArray([]);
+        self.editingItem = ko.observable();
+
+        //  create the transaction for commit and reject
+        self.editTransaction = new ko.subscribable();
+
+        self.loading_records = ko.observable();
+        self.domain = ko.observable();
+        self.domain_id = ko.observable();
+
+        //  helpers
+        self.isItemEditing = function (record) {
+            return record == self.editingItem();
+        };
+
+        self.isAnyItemEditing = function () {
+            return self.editingItem() != null;
+        };
+
+        //  behaviour
+        self.addRecord = function () {
+            //  dont add items while editing another
+            if (self.editingItem() != null) {
+                return;
+            }
+            var record = new Record(0, "." + self.domain(), self.availableRecords[0], "", 0, 60);
+            self.records.push(record);
+
+            //  begin editing the new item straight away
+            self.editRecord(record);
+        };
+
+        self.removeRecord = function (record) {
+            if (self.editingItem() == null) {
+                var answer = true; // confirm('Are you sure you want to delete this record? ' + record.name());
+                if (answer) {
+                    record.deleting(true);
+                    swal({
+                            title: "Please confirm",
+                            text: "Do you really want to delete this record?",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Cancel",
+                            confirmButtonText: "Delete",
+                            confirmButtonColor: "#dc3545",
+                            closeOnConfirm: false,
+                            showLoaderOnConfirm: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                //setTimeout(function () {
+                                $.ajax({
+                                    url: '/domain/' + self.domain_id() + "/json/delete-record",
+                                    type: 'POST',
+                                    contentType: 'application/json; charset=utf-8',
+                                    data: ko.toJSON(record),
+                                    dataType: 'json',
+                                    success: function (result) {
+                                        swal({
+                                            title: "",
+                                            text: result.success,
+                                            type: "success"
+                                        });
+                                        self.records.remove(record)
+                                    },
+                                    error: function (result) {
+                                        swal({
+                                            title: "",
+                                            text: result.responseJSON.error,
+                                            type: "error"
+                                        });
+                                    }
+                                }).always(function () {
+                                    record.deleting(false);
+                                });
+                                //}, 2000);
+                            } else {
+                                record.deleting(false);
+                            }
+                        });
+                }
+            }
+        };
+
+        self.editRecord = function (record) {
+            if (self.editingItem() == null) {
+                // start the transaction
+                record.beginEdit(self.editTransaction);
+
+                // shows the edit fields
+                self.editingItem(record);
+            }
+        };
+
+        self.applyRecord = function (record) {
+            //  commit the edit transaction
+            record.saving(true);
+
+            new_record = {
+                "id": record.id(),
+                "name": record.name.editValue(),
+                "type": record.type.editValue(),
+                "content": record.content.editValue(),
+                "prio": record.prio.editValue(),
+                "ttl": record.ttl.editValue()
+            };
+
+            //setTimeout(function () {
+            $.ajax({
+                url: '/domain/' + self.domain_id() + "/json/update-record",
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(new_record),
+                dataType: 'json',
+                success: function (result) {
+                    self.editTransaction.notifySubscribers(null, "commit");
+
+                    //  hides the edit fields
+                    self.editingItem(null);
+
+                    display_notify(result.success, "success");
+
+                    record.id(result.id);
+                },
+                error: function (result) {
+                    display_notify(result.responseJSON.error, "danger");
+                },
+                statusCode: {
+                    400: function (data) {
+                        console.log("400");
+                    }
+                }
+            }).always(function () {
+                record.saving(false);
+            });
+            //}, 2000);
+        };
+
+        self.cancelEdit = function (record) {
+            // remove new record if it isn't saved
+            if (record.id() == 0) {
+                self.records.remove(record);
+                self.editingItem(null);
+                return;
+            }
+
+            //  reject the edit transaction
+            console.log("cancel");
+            self.editTransaction.notifySubscribers(null, "rollback");
+
+            //  hides the edit fields
+            self.editingItem(null);
+        };
+
+    }
+
+
+    /*----------------------------------------------------------------------*/
+    /* KO Page Binding                                                      */
+    /*----------------------------------------------------------------------*/
+
+
+    //  create the model
+    domainModel = new DomainRecordModel();
+    domainModel.availableRecords = {{ enabled_record_types|safe }};
+
+    var initData = [
+        new Record("Test1", "A", "127.0.0.1"),
+        new Record("Test2", "A", "127.0.0.2"),
+        new Record("Test3", "A", "127.0.0.3")
+    ];
+
+    /*domainModel.records(initData);*/
+
+    //  bind model to the html
+    ko.applyBindings(domainModel);
+
+
+    function display_notify(message, color) {
+        $.notify({
+            // options
+            message: message,
+            showProgressbar: true
+        }, {
+            // settings
+            type: color,
+            timer: 1000,
+            placement: {
+                from: "bottom",
+                align: "right"
+            },
+            animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+            },
+            // icon_type: 'img'
+        });
+    }
+
+</script>
+
+</body>
+</html>
