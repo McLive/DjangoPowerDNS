@@ -2,7 +2,7 @@
 {% load tags %}
 
 {% block content %}
-    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }}</h1>
+    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }} <small>- API</small></h1>
     <hr>
 
     <a href="{% url 'domain' domain.id %}" class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>

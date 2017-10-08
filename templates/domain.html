@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }}</h1>
+    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }} <small>- Record list</small></h1>
     <hr>
 
     <button class="btn btn-primary button addNewButton" data-bind="click: $root.addRecord, enable: !$root.isAnyItemEditing()"><i class="fa fa-plus" aria-hidden="true"></i> Add Record</button>
@@ -25,6 +25,9 @@
                     <th style="width:5%;" class="text-center">TTL</th>
                     <th style="width:15%;"></th>
                 </tr>
+                </thead>
+
+                <!-- ko if: $root.loading_records() -->
                 <tbody data-bind="visible: $root.loading_records()">
                 <tr>
                     <td colspan="6" class="text-center">
@@ -33,6 +36,9 @@
                     </td>
                 </tr>
                 </tbody>
+                <!-- /ko -->
+
+                <!-- ko if: !$root.loading_records() -->
                 <tbody data-bind="foreach: records, visible: !$root.loading_records()" style="display: none;">
                 <tr>
                     <!-- <th style="vertical-align: middle;" scope="row" data-bind="text: id"></th> -->
@@ -80,6 +86,7 @@
                     </td>
                 </tr>
                 </tbody>
+                <!-- /ko -->
             </table>
         </div>
     </div>
