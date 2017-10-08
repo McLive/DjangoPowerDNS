@@ -39,6 +39,10 @@
     <!-- knockout-validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout-validation/2.0.3/knockout.validation.min.js"></script>
 
+    <!-- Fonts -->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
 
     <style>
         body > .container > nav {
@@ -54,6 +58,30 @@
             cursor: pointer;
         }
 
+        body {
+            background-image: url({% static 'img/cream_dust.png' %});
+            font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            /*line-height: 1;*/
+        }
+
+        .api-method {
+            padding-bottom: 10px
+        }
+
+        .records-card {
+            border-radius: .25rem .25rem 0 0;
+        }
+
+        .records-card .card-body {
+            padding: 0;
+        }
+
+        .records-card .card-body .table {
+            margin-bottom: 0;
+        }
+
+
         /*
             Bootstrap 3 blue color for buttons etc..
             background-image: linear-gradient(to bottom, #337ab7 0, #265a88 100%)
@@ -65,7 +93,7 @@
 
 <div class="container">
     {% activeurl %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
             <a class="navbar-brand" href="{% url 'index' %}">Django-PowerDNS</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -173,12 +201,16 @@
                         var modelData = [];
 
                         json = data['records'];
+                        console.log(json)
                         json.forEach(function (obj) {
-                            modelData.push(new Record(obj.id, obj.name, obj.type, obj.content, obj.prio, obj.ttl))
+                            modelData.push(new Record(obj.id, obj.name, obj.strippedName, obj.type, obj.content, obj.prio, obj.ttl, data['domain']))
                         });
                         domainModel.records(modelData);
                         domainModel.domain(data['domain']);
                         domainModel.domain_id(params.id);
+
+                        domainModel.update_record_url(data['update-url']);
+                        domainModel.delete_record_url(data['delete-url']);
                     }
                 }).always(function () {
                     domainModel.loading_records(false);
@@ -276,10 +308,11 @@
     /* Item Model
     /*----------------------------------------------------------------------*/
 
-    function Record(id, name, type, content, prio, ttl) {
+    function Record(id, name, strippedName, type, content, prio, ttl, domain) {
         var self = this;
         self.id = ko.observable(id);
-        self.name = ko.observable(name).extend({editable: true});
+        //self.name = ko.observable(name).extend({editable: true});
+        self.strippedName = ko.observable(strippedName).extend({editable: true});
         self.type = ko.observable(type).extend({editable: true});
         self.content = ko.observable(content).extend({editable: true});
         self.prio = ko.observable(prio).extend({editable: true});
@@ -300,10 +333,36 @@
             return self.errors().length == 0;
         });
 
+        self.name = ko.computed(function () {
+            if (self.strippedName() != "") {
+                return self.strippedName() + "." + domain;
+            }
+            return domain;
+        });
+
+        self.color = ko.computed(function () {
+            if (self.type() === "A") {
+                return "#000000";
+                // return "#0061ff";
+            } else if (self.type() === "CNAME") {
+                return "#ff7900";
+            } else if (self.type() === "SRV") {
+                return "#bd2527";
+            } else if (self.type() === "MX") {
+                return "#d91698";
+            } else if (self.type() === "TXT") {
+                return "#9bca3e";
+            } else if (self.type() === "NS") {
+                return "#9545e5";
+            } else if (self.type() === "SOA") {
+                return "#9545e5";
+            }
+        })
+
     }
 
     Record.prototype.beginEdit = function (transaction) {
-        this.name.beginEdit(transaction);
+        this.strippedName.beginEdit(transaction);
         this.type.beginEdit(transaction);
         this.content.beginEdit(transaction);
         this.prio.beginEdit(transaction);
@@ -328,6 +387,8 @@
         self.loading_records = ko.observable();
         self.domain = ko.observable();
         self.domain_id = ko.observable();
+        self.update_record_url = ko.observable();
+        self.delete_record_url = ko.observable();
 
         //  helpers
         self.isItemEditing = function (record) {
@@ -344,7 +405,7 @@
             if (self.editingItem() != null) {
                 return;
             }
-            var record = new Record(0, "." + self.domain(), self.availableRecords[0], "", 0, 60);
+            var record = new Record(0, self.domain(), "", self.availableRecords[0], "", 0, 60, self.domain());
             self.records.push(record);
 
             //  begin editing the new item straight away
@@ -371,7 +432,8 @@
                             if (isConfirm) {
                                 //setTimeout(function () {
                                 $.ajax({
-                                    url: '/domain/' + self.domain_id() + "/json/delete-record",
+                                    // url: '/domain/' + self.domain_id() + "/json/delete-record",
+                                    url: self.delete_record_url(),
                                     type: 'POST',
                                     contentType: 'application/json; charset=utf-8',
                                     data: ko.toJSON(record),
@@ -419,7 +481,7 @@
 
             new_record = {
                 "id": record.id(),
-                "name": record.name.editValue(),
+                "name": record.strippedName.editValue(),
                 "type": record.type.editValue(),
                 "content": record.content.editValue(),
                 "prio": record.prio.editValue(),
@@ -428,7 +490,8 @@
 
             //setTimeout(function () {
             $.ajax({
-                url: '/domain/' + self.domain_id() + "/json/update-record",
+                // url: '/domain/' + self.domain_id() + "/json/update-record",
+                url: self.update_record_url(),
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(new_record),

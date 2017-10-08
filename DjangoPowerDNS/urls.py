@@ -33,6 +33,7 @@ urlpatterns = [
 
     url(r'^domain/(?P<id>[0-9]+)/users$', dpdns.views.domain_users, name='domain-users'),
     url(r'^domain/(?P<id>[0-9]+)/user/add$', dpdns.views.domain_user_add, name='domain-user-add'),
+    url(r'^domain/(?P<id>[0-9]+)/api$', dpdns.views.domain_api, name='domain-api'),
 
     url(r'^domain/(?P<id>[0-9]+)$', dpdns.views.domain, name='domain'),
 

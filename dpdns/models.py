@@ -118,6 +118,14 @@ class Domains(models.Model):
     def get_users(self):
         return DomainAccess.objects.filter(domain=self).all()
 
+    def get_api_keys(self):
+        try:
+            api_keys = self.api_keys.all()
+            #api_keys = APIKey.objects.filter(domain=self).all()
+            return api_keys
+        except APIKey.DoesNotExist:
+            return None
+
     def __str__(self):
         return self.name
 
@@ -154,7 +162,7 @@ class Records(models.Model):
     ttl = models.IntegerField(blank=True, null=True)
     prio = models.IntegerField(blank=True, null=True)
     change_date = models.IntegerField(blank=True, null=True)
-    disabled = models.IntegerField(blank=True, null=True)
+    disabled = models.IntegerField(blank=True, null=True, default=0)
     ordername = models.CharField(max_length=255, blank=True, null=True)
     auth = models.IntegerField(blank=True, null=True)
 

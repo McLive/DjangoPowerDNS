@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block content %}
+    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }}</h1>
+    <hr>
+
+    <a href="{% url 'domain' domain.id %}" class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">API Methods</h2>
+                    <div class="api-method" style="/*border-bottom: 1px solid #dedede;*/">
+                        <h4 class="api-title">
+                            <span class="badge badge-success">GET</span>
+                            List DNS records
+                        </h4>
+                        <pre class="api-url"
+                             style="background-color: #d9d9d9; border: 1px solid #cdcdcd; padding: 0.5rem;">GET http://{{ request.get_host }}{% api_url 'api-get-records' domain.id %}</pre>
+                    </div>
+                    <div class="api-method">
+                        <h4 class="api-title">
+                            <span class="badge badge-primary">POST</span>
+                            Create a new DNS record
+                        </h4>
+                        <pre class="api-url"
+                             style="background-color: #d9d9d9; border: 1px solid #cdcdcd; padding: 0.5rem;">POST http://{{ request.get_host }}{% api_url 'api-get-records' domain.id %}</pre>
+                    </div>
+                    <div class="api-method">
+                        <h4 class="api-title">
+                            <span class="badge badge-success">GET</span>
+                            View a DNS record
+                        </h4>
+                        <pre class="api-url"
+                             style="background-color: #d9d9d9; border: 1px solid #cdcdcd; padding: 0.5rem;">GET http://{{ request.get_host }}{% api_url 'api-record' domain.id True %}</pre>
+                    </div>
+                    <div class="api-method">
+                        <h4 class="api-title">
+                            <span class="badge badge-info">PUT</span>
+                            Edit a DNS record
+                        </h4>
+                        <pre class="api-url"
+                             style="background-color: #d9d9d9; border: 1px solid #cdcdcd; padding: 0.5rem;">PUT http://{{ request.get_host }}{% api_url 'api-record' domain.id True %}</pre>
+                    </div>
+                    <div class="api-method">
+                        <h4 class="api-title">
+                            <span class="badge badge-danger">DELETE</span>
+                            Delete a DNS record
+                        </h4>
+                        <pre class="api-url"
+                             style="background-color: #d9d9d9; border: 1px solid #cdcdcd; padding: 0.5rem;">DELETE http://{{ request.get_host }}{% api_url 'api-record' domain.id True %}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">API Key</h2>
+                    <p class="card-text">These are the API Keys you can use for access to the domain <strong>{{ domain.name }}</strong>:</p>
+                    {% if domain.get_api_keys %}
+                        {% for api_key in domain.get_api_keys %}
+                            <p><code>{{ api_key.key }}</code></p>
+                        {% endfor %}
+                    {% endif %}
+                    <a href="{% url 'domain' domain.id %}" class="btn btn-primary">List records</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
