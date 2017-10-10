@@ -26,13 +26,37 @@ Install the following dependencies:
 $ apt update
 $ apt install python2.7
 $ apt install python-pip
+$ apt install git
+$ apt install uwsgi
+$ apt install python-mysqldb
+$ apt install mysql-client
+For mariadb:
+$ apt install libmariadbclient-dev
 ```
 
-Clone the repository and install the python requirements
+Clone the repository
 ```sh
-$ git clone https://McLive@bitbucket.org/McLive/djangopowerdns.git
+$ git clone https://github.com/McLive/DjangoPowerDNS.git
+```
 
-...
+Install and setup the virtualenv
+```sh
+$ pip install virtualenv
+$ virtualenv venv
+$ source venv/bin/activate
+```
+
+Install the python requirements
+```sh
+$ pip install -r requirements.txt
+```
+
+* Rename `DjangoPowerDNS/settings.py.dist` to `DjangoPowerDNS/settings.py`
+* Change MySQL settings and secret key in `DjangoPowerDNS/settings.py`
+
+Apply migrations
+```sh
+$ 
 ```
 
 
