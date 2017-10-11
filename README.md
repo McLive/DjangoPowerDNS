@@ -18,6 +18,7 @@ DjangoPowerDNS uses awesome open source tools!
 * [Twitter Bootstrap](http://getbootstrap.com/)
 * [SweetAlert](https://sweetalert.js.org/)
 * [Bootstrap Notify](http://bootstrap-notify.remabledesigns.com/)
+* [Navigo](https://github.com/krasimir/navigo)
 
 ### Installation
 Install the following dependencies:
