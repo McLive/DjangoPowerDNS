@@ -57,7 +57,7 @@ $ pip install -r requirements.txt
 
 Apply migrations
 ```sh
-$ 
+$ python manage.py migrate
 ```
 
 
