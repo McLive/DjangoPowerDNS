@@ -297,7 +297,7 @@ class APIKey(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    domain = models.ForeignKey(Domains, related_name="api_keys", unique=True)
+    domain = models.ForeignKey(Domains, related_name="api_keys")
     key = models.CharField(max_length=40, unique=True)
 
     class Meta:
