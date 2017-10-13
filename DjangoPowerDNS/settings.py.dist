@@ -194,3 +194,8 @@ PDNS_ENABLED_RR_TYPES = [
     'AFSDB',
     'SSHFP',
 ]
+
+PDNS_DEFAULT_SOA = {
+    'PRIMARY_NS': "ns1.host.tld",
+    'EMAIL': "hostmaster@host.tld"
+}

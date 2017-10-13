@@ -97,7 +97,11 @@ class Domains(models.Model):
             return False
 
     def generate_soa(self):
-        content = "ns1.uptimer.eu hostmaster.uptimer.eu. 2017081200 3600 900 604800 86400"
+        content = "{0} {1} {2} 3600 900 604800 86400".format(
+            settings.PDNS_DEFAULT_SOA['PRIMARY_NS'],
+            settings.PDNS_DEFAULT_SOA['EMAIL'],
+            int(self.get_current_timestamp() + str("00"))
+        )
         Records(domain=self, name=self.name, type="SOA", content=content, prio=0, ttl=86400).save()
 
     def get_soa(self):
@@ -113,12 +117,15 @@ class Domains(models.Model):
         serial = parts[2]
         incr = int(serial[-2:])
 
-        new_serial = datetime.datetime.today().strftime('%Y%m%d') + str(incr + 1).zfill(2)
+        new_serial = self.get_current_timestamp() + str(incr + 1).zfill(2)
 
         new_soa = soa.content.replace(serial, new_serial)
 
         soa.content = new_soa
         soa.save()
+
+    def get_current_timestamp(self):
+        return datetime.datetime.today().strftime('%Y%m%d')
 
     def check_user_access(self, user):
         try:
