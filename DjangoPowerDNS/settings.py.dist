@@ -164,8 +164,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
-
 # PowerDNS Manager Settings
 
 PDNS_DEFAULT_ZONE_TYPE = 'NATIVE'
