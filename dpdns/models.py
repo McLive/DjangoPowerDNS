@@ -157,16 +157,6 @@ class Options(models.Model):
         db_table = 'options'
 
 
-class Permissions(models.Model):
-    userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='userid', primary_key=True)
-    domain = models.ForeignKey(Domains, models.DO_NOTHING, db_column='domain')
-
-    class Meta:
-        managed = False
-        db_table = 'permissions'
-        unique_together = (('userid', 'domain'),)
-
-
 class Records(models.Model):
     RECORD_TYPE_CHOICES = []
     for enabled_rr_type in settings.PDNS_ENABLED_RR_TYPES:
