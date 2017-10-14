@@ -20,6 +20,15 @@ DjangoPowerDNS uses awesome open source tools!
 * [Bootstrap Notify](http://bootstrap-notify.remabledesigns.com/)
 * [Navigo](https://github.com/krasimir/navigo)
 
+
+### Screenshots
+
+|  |   |
+|:-------------:|:-------------:|
+|![Domain list](https://dr0p.it/Ckam.png "Domain list")|![Records list](https://dr0p.it/ISG9.png "Records list")|
+|![API preview](https://dr0p.it/p3tI.png "API preview")||
+|  |   |
+
 ### Installation
 Install the following dependencies:
 
