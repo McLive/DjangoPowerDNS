@@ -98,7 +98,7 @@ class Domains(models.Model):
 
     def generate_soa(self):
         content = "{0} {1} {2} 3600 900 604800 86400".format(
-            settings.PDNS_DEFAULT_SOA['PRIMARY_NS'],
+            settings.PDNS_DEFAULT_SOA['PRIMARY_NS'].replace("@", "."),
             settings.PDNS_DEFAULT_SOA['EMAIL'],
             int(self.get_current_timestamp() + str("00"))
         )
