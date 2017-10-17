@@ -199,3 +199,10 @@ PDNS_DEFAULT_SOA = {
     'PRIMARY_NS': "ns1.host.tld",
     'EMAIL': "hostmaster@host.tld"
 }
+
+PDNS_EXCLUDE_RECORDS = [
+    {
+        'domain': 1,
+        'regex': '(vps)\d+'  # example exclude vps654564734.yourdomain.tld from being shown in the web interface.
+    }
+]

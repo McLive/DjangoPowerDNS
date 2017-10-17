@@ -27,6 +27,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logut
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -263,7 +264,17 @@ def domain_json_get_records(req, id):
             return JsonResponse({'error': "You don't have access to that domain."})
 
         record_response = []
-        for record in domain.get_records():
+        records = domain.get_records()
+
+        exclude = settings.PDNS_EXCLUDE_RECORDS
+
+        if exclude:
+            for ex in exclude:
+                if domain.id == ex['domain']:
+                    if "regex" in ex:
+                        records = records.exclude(name__regex=r'{0}'.format(ex['regex']))
+
+        for record in records:
             record_response.append({
                 "id": record.id,
                 "name": record.name,
