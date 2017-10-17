@@ -9,6 +9,8 @@ DjangoPowerDNS is a new PowerDNS webinterface written in Python and powered by D
   - Use the REST-API to change DNS records within your application
   - Add users to certain domains to allow them editing DNS records
 
+___
+
 ### Tech
 
 DjangoPowerDNS uses awesome open source tools!
@@ -20,6 +22,7 @@ DjangoPowerDNS uses awesome open source tools!
 * [Bootstrap Notify](http://bootstrap-notify.remabledesigns.com/)
 * [Navigo](https://github.com/krasimir/navigo)
 
+___
 
 ### Screenshots
 
@@ -28,6 +31,8 @@ DjangoPowerDNS uses awesome open source tools!
 |![Domain list](https://dr0p.it/Ckam.png "Domain list")|![Records list](https://dr0p.it/ISG9.png "Records list")|
 |![API preview](https://dr0p.it/p3tI.png "API preview")||
 |  |   |
+
+___
 
 ### Installation
 Install the following dependencies:
@@ -68,6 +73,13 @@ Apply migrations
 ```sh
 $ python manage.py migrate
 ```
+
+Create a superuser
+```sh
+$ python manage.py createsuperuser
+```
+
+___
 
 
 ### Todos
