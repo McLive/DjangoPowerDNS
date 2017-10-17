@@ -272,7 +272,7 @@ def domain_json_get_records(req, id):
             for ex in exclude:
                 if domain.id == ex['domain']:
                     if "regex" in ex:
-                        records = records.exclude(name__regex=r'{0}'.format(ex['regex']))
+                        records = records.exclude(name__regex=ex['regex'])
 
         for record in records:
             record_response.append({

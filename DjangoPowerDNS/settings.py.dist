@@ -203,6 +203,6 @@ PDNS_DEFAULT_SOA = {
 PDNS_EXCLUDE_RECORDS = [
     {
         'domain': 1,
-        'regex': '(vps)\d+'  # example exclude vps654564734.yourdomain.tld from being shown in the web interface.
+        'regex': r'(vps)\d+'  # example exclude vps654564734.yourdomain.tld from being shown in the web interface.
     }
 ]
