@@ -25,7 +25,7 @@
                     </div>
                     <div class="card-footer text-muted" style="padding: .4rem 1.25rem;">
                         <a href="{% url 'domain' domain.id %}" class="btn btn-primary">View</a>
-                        <button type="button" class="btn btn-outline-danger">Delete</button>
+                        <a href="{% url 'domain-delete' domain.id %}" data-ask="Do you really want to delete domain {{ domain.name }}?" class="btn btn-outline-danger btn-delete-domain">Delete</a>
                     </div>
                 </div>
             </div>

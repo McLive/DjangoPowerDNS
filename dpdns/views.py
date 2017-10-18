@@ -171,6 +171,31 @@ def domain_add(req):
     })
 
 
+@login_required
+def domain_delete(req, id):
+    try:
+        domain = Domains.objects.get(pk=id)
+
+        domain_access = domain.check_user_access(req.user)
+
+        if not domain_access:
+            messages.add_message(req, messages.ERROR, u"You don't have access to that domain")
+            return redirect('domains')
+
+        if domain_access.permission != 10:
+            messages.add_message(req, messages.ERROR, u"You don't have permission to delete this domain.")
+            return redirect('domains')
+
+        domain.delete()
+        messages.add_message(req, messages.SUCCESS, u"Successfully deleted Domain %s." % domain.name)
+
+        return redirect('domains')
+
+    except Domains.DoesNotExist:
+        messages.add_message(req, messages.ERROR, u"That domain doesn't exist.")
+        return redirect('domains')
+
+
 @login_required()
 def domain(req, id):
     try:

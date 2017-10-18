@@ -223,6 +223,28 @@
     });
 
 
+    // Todo: Do this with an ajax request and knockout to delete domains
+    $('.btn-delete-domain').on('click', function (event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        var ask = $(this).data('ask');
+
+        swal({
+            title: "Please confirm",
+            text: ask,
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Cancel",
+            confirmButtonText: "Delete",
+            confirmButtonColor: "#dc3545"
+        }, function (confirm) {
+            if (confirm) {
+                window.location.href = url;
+            }
+        });
+    });
+
+
     /*----------------------------------------------------------------------*/
     /* Custom binding handler for cinfirmable clicks
     /*----------------------------------------------------------------------*/
