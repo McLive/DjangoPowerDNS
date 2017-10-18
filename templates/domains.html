@@ -6,10 +6,17 @@
     <h1>Domains</h1>
     <hr>
 
+    {% if free_domains|length > 0 and request.user.is_superuser %}
+        <div class="alert alert-info" role="alert">
+            <h4>The database contains {{ free_domains|length }} domain{{ free_domains|pluralize }} and no user owns {{ free_domains|pluralize:"it,them" }}.</h4>
+            As you are a superuser, you can <a href="{% url 'domain-claim' %}">claim {{ free_domains|pluralize:"it,them" }} now</a>.
+        </div>
+    {% endif %}
+
     <div class="row">
         {% for domain in domains %}
             <div class="col-sm-4">
-                <div class="card text-center shadow">
+                <div class="card text-center shadow" style="margin-bottom: 30px;">
                     <div class="card-body" style="background-image: url({% static 'img/cubes.png' %})">
                         <h4 class="card-title">{{ domain.name }}</h4>
                         <h6 class="card-subtitle mb-2 text-muted"><strong>{{ domain.get_records|length }}</strong> record{% if domain.get_records|length > 1 %}s {% endif %}</h6>

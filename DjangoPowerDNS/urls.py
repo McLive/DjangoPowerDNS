@@ -44,6 +44,7 @@ urlpatterns = [
 
     url(r'^domains/$', dpdns.views.domains, name='domains'),
     url(r'^domain/add$', dpdns.views.domain_add, name='domain-add'),
+    url(r'^domain/claim$', dpdns.views.domain_claim, name='domain-claim'),
 
     url(r'^domain/(?P<id>[0-9]+)/json/get-records$', dpdns.views.domain_json_get_records, name='domain-json-get-records'),
     url(r'^domain/(?P<id>[0-9]+)/json/update-record$', dpdns.views.domain_json_update_record, name='domain-json-update-record'),

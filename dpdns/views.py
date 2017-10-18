@@ -37,7 +37,7 @@ from rest_framework.response import Response
 
 from DjangoPowerDNS import settings
 from dpdns.api import TokenAuthentication
-from dpdns.forms import LoginForm, DomainAddForm, DomainUserAddForm
+from dpdns.forms import LoginForm, DomainAddForm, DomainUserAddForm, DomainClaimForm
 from dpdns.serializers import RecordSerializer
 from models import Domains, DomainAccess, Records
 
@@ -118,14 +118,39 @@ def logout(req):
 @login_required
 def domains(req):
     # get all domains the current user has access to = DomainAccess entry
-    domain_accesses = DomainAccess.objects.select_related("domain").filter(user=req.user)
+    domains = Domains.objects.filter(domain_accesses__user=req.user)
 
-    domains = []
-    for da in domain_accesses:
-        domains.append(da.domain)
+    # get all domains without any user owning them
+    free_domains = Domains.objects.filter(domain_accesses__isnull=True)
 
     return render(req, 'domains.html', {
-        'domains': domains
+        'domains': domains,
+        'free_domains': free_domains
+    })
+
+
+@login_required
+def domain_claim(req):
+    if not req.user.is_superuser:
+        return redirect('domains')
+
+    # get all domains without any user owning them
+    free_domains = Domains.objects.filter(domain_accesses__isnull=True)
+    if not free_domains:
+        return redirect('domains')
+
+    if req.method == 'POST':
+        form = DomainClaimForm(req.POST)
+
+        if form.is_valid():
+            for item in form.cleaned_data['domain']:
+                DomainAccess(domain=item, user=req.user, permission=10).save()
+                messages.add_message(req, messages.SUCCESS, u"Successfully claimed Domain %s." % item.name)
+            return redirect('domains')
+    else:
+        form = DomainClaimForm()
+    return render(req, 'domain-claim.html', {
+        'form': form,
     })
 
 

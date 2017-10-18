@@ -51,3 +51,10 @@ class DomainUserAddForm(ModelForm):
                     'placeholder': 'The name of your Domain.'
                 }),
         }"""
+
+
+class DomainClaimForm(forms.Form):
+    domain = forms.ModelMultipleChoiceField(
+        queryset=Domains.objects.filter(domain_accesses__isnull=True),
+        widget=forms.CheckboxSelectMultiple,
+    )
