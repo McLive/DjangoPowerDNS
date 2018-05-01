@@ -46,7 +46,10 @@
                         <div class="input-group input-group-sm">
                             <input style="display: none;" type="text" class="form-control form-control-sm" data-bind="value: strippedName.editValue, visible: $root.isItemEditing($data)"
                                    aria-label=".{{ domain.name }}" aria-describedby="basic-addon2">
-                            <span style="display: none;" class="input-group-addon" id="basic-addon2" data-bind="visible: $root.isItemEditing($data)">.{{ domain.name }}</span>
+                            <!-- <span style="display: none;" class="input-group-addon" id="basic-addon2" data-bind="visible: $root.isItemEditing($data)">.{{ domain.name }}</span> -->
+                            <div class="input-group-append" style="display: none;" data-bind="visible: $root.isItemEditing($data)">
+                                <span class="input-group-text" id="validationTooltipUsernamePrepend">.{{ domain.name }}</span>
+                            </div>
                             <!--<input style="display: none;" type="text" class="form-control form-control-sm" data-bind="value: name.editValue, visible: $root.isItemEditing($data)">-->
                         </div>
                         <a style="font-size: .875rem;" class="read" data-bind="text: name, visible: !$root.isItemEditing($data)"></a>
