@@ -37,6 +37,7 @@ ___
 ### Installation
 Install the following dependencies:
 
+On Debian based Systems:
 ```sh
 $ apt update
 $ apt install python2.7
@@ -47,6 +48,19 @@ $ apt install python-mysqldb
 $ apt install mysql-client
 For mariadb:
 $ apt install libmariadbclient-dev
+```
+
+On RHEL based Systems: 
+```sh
+$ yum update -y
+$ yum install -y python
+$ yum install -y python-pip
+$ yum install -y git
+$ yum install -y uwsgi
+$ yum install -y MySQL-python
+$ yum install -y python-devel
+$ yum install -y mariadb-devel
+$ yum install libxslt-devel libxml2-devel
 ```
 
 Clone the repository
