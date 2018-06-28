@@ -28,8 +28,8 @@ ___
 
 |  |   |
 |:-------------:|:-------------:|
-|![Domain list](https://dr0p.it/Ckam.png "Domain list")|![Records list](https://dr0p.it/ISG9.png "Records list")|
-|![API preview](https://dr0p.it/p3tI.png "API preview")||
+|![Domain list](https://upl0ad.cloud/K738.png "Domain list")|![Records list](https://upl0ad.cloud/EtIL.png "Records list")|
+|![API preview](https://upl0ad.cloud/1pVW.png "API preview")||
 |  |   |
 
 ___
