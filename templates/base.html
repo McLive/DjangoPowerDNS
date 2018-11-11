@@ -466,6 +466,20 @@
         self.update_record_url = ko.observable();
         self.delete_record_url = ko.observable();
 
+        self.query = ko.observable("");
+        self.filteredRecords = ko.computed(function () {
+            var filter = self.query().toLowerCase();
+
+            if (!filter) {
+                return self.records();
+            } else {
+                filtered = ko.utils.arrayFilter(self.records(), function (item) {
+                    return (item.strippedName().toLowerCase().indexOf(filter) !== -1) || (item.content().toLowerCase().indexOf(filter) !== -1) || self.isItemEditing(item);
+                });
+                return filtered
+            }
+        });
+
         //  helpers
         self.isItemEditing = function (record) {
             return record == self.editingItem();

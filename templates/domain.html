@@ -2,7 +2,9 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }} <small>- Record list</small></h1>
+    <h1><i class="fa fa-globe" aria-hidden="true"></i> {{ domain.name }}
+        <small>- Record list</small>
+    </h1>
     <hr>
 
     <button class="btn btn-primary button addNewButton" data-bind="click: $root.addRecord, enable: !$root.isAnyItemEditing()"><i class="fa fa-plus" aria-hidden="true"></i> Add Record</button>
@@ -10,6 +12,15 @@
         <a class="btn btn-warning" href="{% url 'domain-users' domain.id %}"><i class="fa fa-users" aria-hidden="true"></i> Users</a>
     {% endif %}
     <a class="btn btn-info" href="{% url 'domain-api' domain.id %}"><i class="fa fa-server" aria-hidden="true"></i> API</a>
+
+    <div class="form pull-right">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupPrepend"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="search" class="form-control" data-bind="textInput: query" autocomplete="off"/>
+        </div>
+    </div>
     <hr>
 
     <div class="card records-card shadow">
@@ -39,7 +50,7 @@
                 <!-- /ko -->
 
                 <!-- ko if: !$root.loading_records() -->
-                <tbody data-bind="foreach: records, visible: !$root.loading_records()" style="display: none;">
+                <tbody data-bind="foreach: filteredRecords, visible: !$root.loading_records()" style="display: none;">
                 <tr>
                     <!-- <th style="vertical-align: middle;" scope="row" data-bind="text: id"></th> -->
                     <td style="vertical-align: middle; /*border-left: 2px solid;*/" data-bind="style: {'border-left': type() == 'A' ? '0px solid' : '2px solid', 'border-left-color': color() }">
