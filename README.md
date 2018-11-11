@@ -19,7 +19,7 @@ DjangoPowerDNS uses awesome open source tools!
 * [Knockout.js](http://knockoutjs.com/)
 * [Twitter Bootstrap](http://getbootstrap.com/)
 * [SweetAlert](https://sweetalert.js.org/)
-* [Bootstrap Notify](http://bootstrap-notify.remabledesigns.com/)
+* [toastr](https://github.com/CodeSeven/toastr)
 * [Navigo](https://github.com/krasimir/navigo)
 
 ___
