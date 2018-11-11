@@ -177,9 +177,9 @@ class Records(models.Model):
     ttl = models.IntegerField(blank=True, null=True)
     prio = models.IntegerField(blank=True, null=True)
     change_date = models.IntegerField(blank=True, null=True)
-    disabled = models.IntegerField(blank=True, null=True, default=0)
+    disabled = models.BooleanField(default=False)
     ordername = models.CharField(max_length=255, blank=True, null=True)
-    auth = models.IntegerField(blank=True, null=True)
+    auth = models.BooleanField(default=True)
 
     class Meta:
         managed = False
