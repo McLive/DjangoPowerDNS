@@ -18,9 +18,9 @@
                 <thead>
                 <tr>
                     <!-- <th style="width:5%;">#</th> -->
-                    <th style="width:15%;">Name</th>
-                    <th style="width:10%;" class="text-center">Type</th>
-                    <th style="width:50%;">Content</th>
+                    <th data-bind="sort: { arr: records, prop: 'strippedName()' }" style="width:15%;">Name</th>
+                    <th data-bind="sort: { arr: records, prop: 'type()' }" style="width:10%;" class="text-center">Type</th>
+                    <th data-bind="sort: { arr: records, prop: 'content()' }" style="width:50%;">Content</th>
                     <th style="width:5%;">Prio</th>
                     <th style="width:5%;" class="text-center">TTL</th>
                     <th style="width:15%;"></th>

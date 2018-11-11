@@ -23,6 +23,9 @@
     <!-- animate.css -->
     <link href="{% static 'css/animate.css' %}" rel="stylesheet">
 
+    <!-- toastr -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
     <!-- SweetAlert -->
     <link href="{% static 'sweetalert-master/dist/sweetalert.css' %}" type="text/css" rel="stylesheet">
 
@@ -153,6 +156,9 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
 
+<!-- toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 {% csrf_token %}
 
 <script>
@@ -244,9 +250,54 @@
         });
     });
 
+    /*----------------------------------------------------------------------*/
+    /* Custom binding handler for sortable table rows
+    /*----------------------------------------------------------------------*/
+
+    ko.bindingHandlers.sort = {
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var asc = false;
+            element.style.cursor = 'pointer';
+
+            element.onclick = function () {
+                var value = valueAccessor();
+                var prop = value.prop;
+                var data = value.arr;
+
+                asc = !asc;
+
+                data.sort(function (left, right) {
+                    var rec1 = left;
+                    var rec2 = right;
+
+                    if (!asc) {
+                        rec1 = right;
+                        rec2 = left;
+                    }
+
+                    var props = prop.split('.');
+                    for (var i in props) {
+                        var propName = props[i];
+                        var parenIndex = propName.indexOf('()');
+                        if (parenIndex > 0) {
+                            propName = propName.substring(0, parenIndex);
+                            rec1 = rec1[propName]();
+                            rec2 = rec2[propName]();
+                        } else {
+                            rec1 = rec1[propName];
+                            rec2 = rec2[propName];
+                        }
+                    }
+
+                    return rec1 == rec2 ? 0 : rec1 < rec2 ? -1 : 1;
+                });
+            };
+        }
+    };
+
 
     /*----------------------------------------------------------------------*/
-    /* Custom binding handler for cinfirmable clicks
+    /* Custom binding handler for confirmable clicks
     /*----------------------------------------------------------------------*/
 
     ko.bindingHandlers.confirmClick = {
@@ -532,7 +583,7 @@
                     record.id(result.id);
                 },
                 error: function (result) {
-                    display_notify(result.responseJSON.error, "danger");
+                    display_notify(result.responseJSON.error, "error");
                 },
                 statusCode: {
                     400: function (data) {
@@ -584,26 +635,30 @@
     //  bind model to the html
     ko.applyBindings(domainModel);
 
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    function capFirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1)
+    }
 
     function display_notify(message, color) {
-        $.notify({
-            // options
-            message: message,
-            showProgressbar: true
-        }, {
-            // settings
-            type: color,
-            timer: 1000,
-            placement: {
-                from: "bottom",
-                align: "right"
-            },
-            animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-            },
-            // icon_type: 'img'
-        });
+        toastr[color](message, capFirst(color))
     }
 
 </script>
