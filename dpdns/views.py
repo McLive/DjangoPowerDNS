@@ -384,6 +384,20 @@ def domain_json_update_record(req, id):
         if json_record['type'] == "AAAA" and not is_valid_ipv6_address(json_record['content']):
             return JsonResponse(data={'error': "{0} is not a valid IPv6 address.".format(json_record['content'])}, status=500)
 
+        other_records = domain.get_records().filter(name=name).exclude(pk=json_record['id'])
+        allowed_cname_types = ["KEY", "SIG", "NXT"]
+
+        # Validate CNAME record
+        if json_record['type'] == "CNAME":
+            for rec in other_records:
+                if rec.type not in allowed_cname_types:
+                    return JsonResponse(data={'error': "There are other records for {0}. You can't combine {1} and {2}".format(name, rec.type, json_record['type'])}, status=500)
+
+        # check if there are other CNAME records
+        for rec in other_records:
+            if rec.type == "CNAME":
+                if json_record['type'] not in allowed_cname_types:
+                    return JsonResponse(data={'error': "There are other records for {0}. You can't combine {1} and {2}".format(name, rec.type, json_record['type'])}, status=500)
 
         try:
             # try to update existing record
