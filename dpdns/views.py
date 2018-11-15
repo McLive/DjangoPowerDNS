@@ -90,7 +90,7 @@ def login(req):
                     return redirect('/')
             else:
                 time.sleep(1)
-                f._errors['password'] = ["Logindaten falsch."]
+                f._errors['password'] = ["Wrong username or password."]
     else:
         f = LoginForm()
 
@@ -145,7 +145,7 @@ def domain_claim(req):
         if form.is_valid():
             for item in form.cleaned_data['domain']:
                 DomainAccess(domain=item, user=req.user, permission=10).save()
-                messages.add_message(req, messages.SUCCESS, u"Successfully claimed Domain %s." % item.name)
+                messages.add_message(req, messages.SUCCESS, u"Successfully claimed domain %s." % item.name)
             return redirect('domains')
     else:
         form = DomainClaimForm()
@@ -162,7 +162,7 @@ def domain_add(req):
         if form.is_valid():
             f = form.save()
             DomainAccess(domain=f, user=req.user, permission=10).save()
-            messages.add_message(req, messages.SUCCESS, u"Successfully added Domain %s." % f.name)
+            messages.add_message(req, messages.SUCCESS, u"Successfully added domain %s." % f.name)
             return redirect('domains')
     else:
         form = DomainAddForm()
@@ -187,7 +187,7 @@ def domain_delete(req, id):
             return redirect('domains')
 
         domain.delete()
-        messages.add_message(req, messages.SUCCESS, u"Successfully deleted Domain %s." % domain.name)
+        messages.add_message(req, messages.SUCCESS, u"Successfully deleted domain %s." % domain.name)
 
         return redirect('domains')
 
@@ -417,7 +417,7 @@ def domain_json_update_record(req, id):
             domain.update_soa_serial()
             return JsonResponse({'success': "Created new record.", 'id': new_record.id})
         except ValueError:
-            return JsonResponse(data={'error': "Internal Servererror."}, status=500)
+            return JsonResponse(data={'error': "Internal Server Error."}, status=500)
 
     except Domains.DoesNotExist:
         return JsonResponse(data={'error': "Error viewing domain."}, status=500)
