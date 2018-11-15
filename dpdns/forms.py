@@ -35,7 +35,7 @@ class DomainAddForm(ModelForm):
         widgets = {
             'name': forms.TextInput(
                 attrs={
-                    'placeholder': 'The name of your Domain.'
+                    'placeholder': 'The name of your domain.'
                 }),
         }
 
@@ -48,7 +48,7 @@ class DomainUserAddForm(ModelForm):
         """widgets = {
             'name': forms.TextInput(
                 attrs={
-                    'placeholder': 'The name of your Domain.'
+                    'placeholder': 'The name of your domain.'
                 }),
         }"""
 

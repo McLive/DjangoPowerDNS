@@ -15,7 +15,7 @@
     <title>Django-PowerDNS</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{% static 'bootstrap-4.1.1/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap-4.1.3/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Font-Awesome -->
     <link href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet">
@@ -24,7 +24,7 @@
     <link href="{% static 'css/animate.css' %}" rel="stylesheet">
 
     <!-- toastr -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <link href="{% static 'css/toastr-2.1.3.min.css' %}" rel="stylesheet">
 
     <!-- SweetAlert -->
     <link href="{% static 'sweetalert-master/dist/sweetalert.css' %}" type="text/css" rel="stylesheet">
@@ -55,10 +55,6 @@
 
         .container {
             max-width: 1250px;
-        }
-
-        .btn:enabled {
-            cursor: pointer;
         }
 
         body {
@@ -148,16 +144,13 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="{% static 'bootstrap-4.1.1/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'bootstrap-4.1.3/js/bootstrap.min.js' %}"></script>
 
 <!-- toastr -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{% static 'js/toastr-2.1.3.min.js' %}"></script>
 
 {% csrf_token %}
 
