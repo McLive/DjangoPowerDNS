@@ -401,7 +401,7 @@ def domain_json_update_record(req, id):
 
         try:
             # try to update existing record
-            record = Records.objects.get(pk=json_record['id'])
+            record = domain.get_record(json_record['id'])
             record.name = name
             record.type = json_record['type']
             record.content = json_record['content']
@@ -437,7 +437,7 @@ def domain_json_delete_record(req, id):
         json_record = json.loads(req.body)
 
         try:
-            record = Records.objects.get(pk=json_record['id'])
+            record = domain.get_record(json_record['id'])
             record.delete()
             domain.update_soa_serial()
             return JsonResponse({'success': "Deleted record.", 'id': record.id})
@@ -515,8 +515,6 @@ def api_record(req, pk, id):
             return Response({'error': "You don't have access to that domain."})
 
         record = domain.get_record(id)
-        if not record:
-            return Response({'error': "That record doesn't exist."})
 
         if req.method == 'GET':
             serializer = RecordSerializer(record)
@@ -536,3 +534,6 @@ def api_record(req, pk, id):
 
     except Domains.DoesNotExist:
         return Response(data={'error': "Error viewing domain."}, status=500)
+
+    except Records.DoesNotExist:
+        return Response({'error': "That record doesn't exist."})

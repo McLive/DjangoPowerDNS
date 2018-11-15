@@ -91,10 +91,7 @@ class Domains(models.Model):
         return Records.objects.filter(domain=self)
 
     def get_record(self, id):
-        try:
-            return Records.objects.get(domain=self, pk=id)
-        except Records.DoesNotExist:
-            return False
+        return Records.objects.get(domain=self, pk=id)
 
     def generate_soa(self):
         content = "{0} {1} {2} 3600 900 604800 86400".format(
