@@ -7,25 +7,29 @@
     </h1>
     <hr>
 
-    <button class="btn btn-primary button addNewButton" data-bind="click: $root.addRecord, enable: !$root.isAnyItemEditing()"><i class="fa fa-plus" aria-hidden="true"></i> Add Record</button>
+    <button class="d-none d-md-block btn btn-primary button addNewButton mb-2" data-bind="click: $root.addRecord, enable: !$root.isAnyItemEditing()"><i class="fa fa-plus" aria-hidden="true"></i> Add Record</button>
+    <button class="d-md-none btn btn-primary button addNewButton mb-2" data-bind="click: $root.addRecordMobile, enable: !$root.isAnyItemEditing()"><i class="fa fa-plus" aria-hidden="true"></i> Add Record</button>
+
     {% if domain_access.permission == 10 %}
-        <a class="btn btn-warning" href="{% url 'domain-users' domain.id %}"><i class="fa fa-users" aria-hidden="true"></i> Users</a>
+        <a class="btn btn-warning mb-2" href="{% url 'domain-users' domain.id %}"><i class="fa fa-users" aria-hidden="true"></i> Users</a>
     {% endif %}
-    <a class="btn btn-info" href="{% url 'domain-api' domain.id %}"><i class="fa fa-server" aria-hidden="true"></i> API</a>
+    <a class="btn btn-info mb-2" href="{% url 'domain-api' domain.id %}"><i class="fa fa-server" aria-hidden="true"></i> API</a>
 
     <div class="form pull-right">
-        <div class="input-group">
+        <div class="input-group mb-2">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroupPrepend"><i class="fa fa-search"></i></span>
             </div>
             <input type="search" class="form-control" data-bind="textInput: query" autocomplete="off"/>
         </div>
     </div>
-    <hr>
+
+    <div class="clearfix"></div>
+    <hr class="mt-2">
 
     <div class="card records-card shadow">
         <div class="card-body">
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-sm d-none d-md-table">
                 <thead>
                 <tr>
                     <!-- <th style="width:5%;">#</th> -->
@@ -102,6 +106,103 @@
                 </tbody>
                 <!-- /ko -->
             </table>
+
+            <!-- ko if: !$root.loading_records() -->
+            <div class="d-md-none mobile-records" data-bind="foreach: filteredRecords, visible: !$root.loading_records()" style="display: none;">
+                <div class="mobile-record"
+                     data-bind="style: {'border-left': type() == 'A' ? '4px solid' : '4px solid', 'border-left-color': color(), 'background-color': $index() %2 == '0' ? 'rgba(220, 222, 226, 0.2)' : '' }"
+                     style="padding: 8px;">
+                    <!-- <strong><a class="read" data-bind="style: { color: color() }, text: type() + ' record', visible: !$root.isItemEditing($data)"></a></strong> -->
+
+                    <a data-bind="text: name"></a>
+                    <strong><a class="pl-2" data-bind="style: { color: color() }, text: type"></a></strong>
+                    <span class="pl-2 pr-2"><i data-bind="style: { color: color() }" class="fa fa-arrow-right"></i></span>
+                    <a data-bind="text: content"></a>
+                    <div class="clearfix"></div>
+                    <span data-bind="visible: prio() > 0" style="font-size: .975rem;"><i class="fa fa-star" style="padding-right: 0.3rem;"></i><a class="read" data-bind="text: prio"></a></span>
+                    <span style="font-size: .975rem;"><i class="fa fa-clock-o" style="padding-right: 0.3rem;"></i><a class="read" data-bind="text: ttl"></a></span>
+                    <div class="tools pull-right">
+                        <button class="btn btn-outline-primary btn-sm button toolButton"
+                                data-bind="click: $root.editRecordMobile.bind($root), visible: !$root.isItemEditing($data), enable: !$root.isAnyItemEditing()">Edit
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm button toolButton"
+                                data-bind="click: $root.removeRecord.bind($root), visible: !$root.isItemEditing($data), enable: !$root.isAnyItemEditing()">Remove <i data-bind="visible: deleting"
+                                                                                                                                                                     class="fa fa-cog fa-spin fa-fw"></i>
+                        </button>
+                        <button class="btn btn-outline-success btn-sm button toolButton" data-bind="click: $root.applyRecord.bind($root), visible: $root.isItemEditing($data), enable: !saving() ">Apply
+                            <i ata-bind="visible: saving" class="fa fa-cog fa-spin fa-fw"></i></button>
+                        <button class="btn btn-outline-secondary btn-sm button toolButton" data-bind="click: $root.cancelEdit.bind($root), visible: $root.isItemEditing($data), enable: !saving()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal hide fade" tabindex="-1" role="dialog" data-bind="showModal:isMobileEditing, with:editingItem">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" data-bind="text: name"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    data-bind="click: $root.cancelEdit.bind($root), visible: $root.isItemEditing($data), enable: !saving()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="inputName"><i class="fa fa-tag"></i> Name</label>
+                                    <div class="input-group input-group-sm">
+                                        <input style="display: none;" type="text" class="form-control form-control-sm" data-bind="value: strippedName.editValue, visible: $root.isItemEditing($data)"
+                                               aria-label=".{{ domain.name }}" aria-describedby="basic-addon2" id="inputName">
+                                        <div class="input-group-append" style="display: none;" data-bind="visible: $root.isItemEditing($data)">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">.{{ domain.name }}</span>
+                                        </div>
+                                    </div>
+                                    <small id="emailHelp" class="form-text text-muted">The name of your newly created DNS record.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputType"><i class="fa fa-cogs"></i> Type</label>
+                                    <select style="display: none;" class="form-control form-control-sm edit"
+                                            data-bind="options: $root.availableRecords, value: type.editValue, visible: $root.isItemEditing($data)" id="inputType"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="content"><i class="fa fa-link"></i> Content</label>
+                                    <input id="content" style="display: none;" type="text" class="form-control form-control-sm"
+                                           data-bind="value: content.editValue, visible: $root.isItemEditing($data)">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="inputPrio"><i class="fa fa-star" style="padding-right: 0.3rem;"></i> Priority</label>
+                                            <input id="inputPrio" style="display: none;" type="text" class="form-control form-control-sm"
+                                                   data-bind="value: prio.editValue, visible: $root.isItemEditing($data)">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="inputTtl"><i class="fa fa-clock-o" style="padding-right: 0.3rem;"></i> TTL</label>
+                                            <input id="inputTtl" style="display: none;" type="text" class="form-control form-control-sm"
+                                                   data-bind="value: ttl.editValue, visible: $root.isItemEditing($data)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                    data-bind="click: $root.cancelEdit.bind($root), visible: $root.isItemEditing($data), enable: !saving()">Close
+                            </button>
+                            <button type="button" class="btn btn-primary" data-bind="click: $root.applyRecord.bind($root), visible: $root.isItemEditing($data), enable: !saving() ">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /ko -->
         </div>
     </div>
 {% endblock %}

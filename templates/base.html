@@ -288,6 +288,25 @@
         }
     };
 
+    /*----------------------------------------------------------------------*/
+    /* Custom binding handler to open bootstrap modals
+    /*----------------------------------------------------------------------*/
+
+    ko.bindingHandlers.showModal = {
+        init: function (element, valueAccessor) {
+        },
+        update: function (element, valueAccessor, allBindings, viewModel) {
+            var value = valueAccessor();
+            if (ko.utils.unwrapObservable(value)) {
+                $(element).modal('show');
+                // this is to focus input field inside dialog
+                $("input", element).focus();
+            }
+            else {
+                $(element).modal('hide');
+            }
+        }
+};
 
     /*----------------------------------------------------------------------*/
     /* Custom binding handler for confirmable clicks
@@ -449,6 +468,7 @@
         self.availableRecords = [];
         self.records = ko.observableArray([]);
         self.editingItem = ko.observable();
+        self.isMobileEditing = ko.observable();
 
         //  create the transaction for commit and reject
         self.editTransaction = new ko.subscribable();
@@ -493,6 +513,11 @@
 
             //  begin editing the new item straight away
             self.editRecord(record);
+        };
+
+        self.addRecordMobile = function () {
+            self.addRecord();
+            self.isMobileEditing(true);
         };
 
         self.removeRecord = function (record) {
@@ -558,6 +583,11 @@
             }
         };
 
+        self.editRecordMobile = function (record) {
+            self.editRecord(record);
+            self.isMobileEditing(true);
+        };
+
         self.applyRecord = function (record) {
             //  commit the edit transaction
             record.saving(true);
@@ -584,6 +614,7 @@
 
                     //  hides the edit fields
                     self.editingItem(null);
+                    self.isMobileEditing(false);
 
                     display_notify(result.success, "success");
 
@@ -608,6 +639,7 @@
             if (record.id() == 0) {
                 self.records.remove(record);
                 self.editingItem(null);
+                self.isMobileEditing(false);
                 return;
             }
 
@@ -617,6 +649,7 @@
 
             //  hides the edit fields
             self.editingItem(null);
+            self.isMobileEditing(false);
         };
 
     }
