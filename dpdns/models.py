@@ -109,17 +109,36 @@ class Domains(models.Model):
             return False
 
         soa = self.get_soa()
-        parts = soa.content.split(" ")
+        serial = self.get_soa_serial()
 
-        serial = parts[2]
         incr = int(serial[-2:])
 
-        new_serial = self.get_current_timestamp() + str(incr + 1).zfill(2)
+        curr_day = datetime.datetime.strptime(serial[:8], '%Y%m%d')
+        next_day = (curr_day + datetime.timedelta(days=1)).strftime('%Y%m%d')
+
+        if incr < 99:
+            # if we are already a day ahead, increment using this timestamp
+            if curr_day.strftime('%Y%m%d') > self.get_current_timestamp():
+                new_serial = curr_day.strftime('%Y%m%d') + str(incr + 1).zfill(2)
+
+            # else use actual timestamp
+            else:
+                new_serial = self.get_current_timestamp() + str(incr + 1).zfill(2)
+
+        # if we have more than 99 changes this day, start timestamp from next day
+        else:
+            new_serial = str(next_day) + '01'
 
         new_soa = soa.content.replace(serial, new_serial)
 
         soa.content = new_soa
         soa.save()
+
+    def get_soa_serial(self):
+        soa = self.get_soa()
+        parts = soa.content.split(" ")
+        serial = parts[2]
+        return serial
 
     def get_current_timestamp(self):
         return datetime.datetime.today().strftime('%Y%m%d')
