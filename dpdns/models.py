@@ -192,7 +192,6 @@ class Records(models.Model):
     content = models.CharField(max_length=64000, blank=True, null=True)
     ttl = models.IntegerField(blank=True, null=True)
     prio = models.IntegerField(blank=True, null=True)
-    change_date = models.IntegerField(blank=True, null=True)
     disabled = models.BooleanField(default=False)
     ordername = models.CharField(max_length=255, blank=True, null=True)
     auth = models.BooleanField(default=True)
