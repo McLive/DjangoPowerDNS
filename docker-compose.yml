@@ -1,10 +1,9 @@
 version: "3.4"
 services:
-
   server:
-    container_name: powerDNS
+    container_name: powerdns
     restart: unless-stopped
-    image: powerDNS:latest
+    image: powerdns:latest
     build:
       context: ./server
       dockerfile: dockerfile
