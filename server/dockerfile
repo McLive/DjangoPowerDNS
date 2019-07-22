@@ -5,14 +5,17 @@ LABEL maintainer="mail@mclive.eu"
 
 # Pre-build
 WORKDIR /var/server
-RUN apt update -y
-RUN apt install -y python2.7 python-pip uwsgi python-mysqldb libmariadbclient-dev
-RUN pip install virtualenv
-RUN virtualenv venv
-RUN source venv/bin/activate
+COPY ./* /var/server/
+RUN apt update -y && \
+    apt install -y python2.7 python-pip uwsgi python-mysqldb default-libmysqlclient-dev libmariadbclient-dev && \
+    sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i.bkp && \
+    pip install virtualenv && \
+    virtualenv venv && \
+    . venv/bin/activate && \
+    pip install --upgrade setuptools
 # Copy the data
 COPY ./* ./
-RUN cp ./templates/uwsgi-config.ini /etc/uwsgi/apps-enabled/dpdns.ini
+RUN cp uwsgi-config.ini /etc/uwsgi/apps-enabled/dpdns.ini
 
 # Build data
 RUN pip install -r requirements.txt
