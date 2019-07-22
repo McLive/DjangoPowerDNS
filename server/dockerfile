@@ -1,0 +1,18 @@
+FROM debian:latest
+# Metadata
+LABEL maintainer="mail@mclive.eu"
+# Pre-build
+WORKDIR /var/server
+RUN apt update -y
+RUN apt install -y uwsgi python-mysqldb libmariadbclient-dev
+RUN cp ./templates/uwsgi-config.ini /etc/uwsgi/apps-enabled/dpdns.ini
+RUN pip install virtualenv
+RUN virtualenv venv
+RUN source venv/bin/activate
+# Build data
+COPY ./* ./
+RUN pip install -r requirements.txt
+RUN python manage.py migrate
+RUN python init_createsuperuser.py
+# Run on startup
+CMD uwsgi

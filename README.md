@@ -28,10 +28,8 @@ ___
 
 |  |   |
 |:-------------:|:-------------:|
-|![Domain list](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010520.png "Domain list")|![Records list](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010707.png "Records list")|
-|![Records list filtered](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010719.png "Records list filtered")|![Records list editing](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010732.png "Records list editing")|
-|![Records list add](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010743.png "Records list add")|![Records list delete](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010944.png "Records list delete")|
-|![API preview](https://share.aljaxus.eu/2019-07-22/12%3A11%3A31am-20190722010913.png "API preview")||
+|![Domain list](https://upl0ad.cloud/K738.png "Domain list")|![Records list](https://upl0ad.cloud/EtIL.png "Records list")|
+|![API preview](https://upl0ad.cloud/1pVW.png "API preview")||
 |  |   |
 
 ___

@@ -1,0 +1,20 @@
+version: "3.4"
+services:
+
+  server:
+    container_name: powerDNS
+    restart: unless-stopped
+    image: powerDNS:latest
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    command: ["uwsgi"]
+    volumes:
+    healthcheck:
+      test: ["CMD", "curl", "-sSG", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    ports:
+      - "8080:80"
