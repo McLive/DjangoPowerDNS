@@ -10,6 +10,7 @@ services:
       dockerfile: dockerfile
     command: ["uwsgi"]
     volumes:
+      - ./server/DjangoPowerDNS/settings.py:/var/server/server/DjangoPowerDNS/settings.py
     healthcheck:
       test: ["CMD", "curl", "-sSG", "http://localhost:80"]
       interval: 30s
