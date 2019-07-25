@@ -1,0 +1,26 @@
+FROM debian:latest
+
+# Metadata
+LABEL maintainer="mail@mclive.eu"
+
+# Pre-build
+WORKDIR /var/server
+COPY ./* /var/server/
+RUN apt update -y && \
+    apt install -y python2.7 python-pip uwsgi python-mysqldb default-libmysqlclient-dev libmariadbclient-dev && \
+    sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i.bkp && \
+    pip install virtualenv && \
+    virtualenv venv && \
+    . venv/bin/activate && \
+    pip install --upgrade setuptools
+# Copy the data
+COPY ./* ./
+RUN cp uwsgi-config.ini /etc/uwsgi/apps-enabled/dpdns.ini
+
+# Build data
+RUN pip install -r requirements.txt
+RUN python manage.py migrate
+RUN python init_createsuperuser.py
+
+# Run on startup
+CMD uwsgi

@@ -1,0 +1,20 @@
+version: "3.4"
+services:
+  server:
+    container_name: powerdns
+    restart: unless-stopped
+    image: powerdns:latest
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    command: ["uwsgi"]
+    volumes:
+      - ./server/DjangoPowerDNS/settings.py:/var/server/server/DjangoPowerDNS/settings.py
+    healthcheck:
+      test: ["CMD", "curl", "-sSG", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    ports:
+      - "8080:80"
