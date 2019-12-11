@@ -2,7 +2,7 @@ Django==1.11.23
 django-activeurl==0.1.9
 django-appconf==1.0.2
 django-bootstrap3==9.0.0
-django-bootstrap4==0.0.1
+django-bootstrap4==1.1.1
 djangorestframework==3.9.1
 ipaddress==1.0.18
 virtualenv==1.11.6
