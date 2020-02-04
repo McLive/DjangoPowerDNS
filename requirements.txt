@@ -1,4 +1,4 @@
-Django==1.11.23
+Django==3.0.3
 django-activeurl==0.1.9
 django-appconf==1.0.2
 django-bootstrap3==9.0.0
