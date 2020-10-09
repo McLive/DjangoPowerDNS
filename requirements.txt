@@ -7,4 +7,4 @@ djangorestframework==3.9.1
 ipaddress==1.0.18
 virtualenv==1.11.6
 mysql-python==1.2.5
-sqlparse==0.2.4
+sqlparse==0.4.1
