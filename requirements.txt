@@ -5,6 +5,6 @@ django-bootstrap3==9.0.0
 django-bootstrap4==0.0.1
 djangorestframework==3.9.1
 ipaddress==1.0.18
-virtualenv==1.11.6
+virtualenv==20.3.0
 mysql-python==1.2.5
 sqlparse==0.2.4
