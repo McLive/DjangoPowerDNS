@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: virtualenv
+    versions:
+    - 20.4.0
+    - 20.4.1
+    - 20.4.2
+    - 20.4.3
+  - dependency-name: djangorestframework
+    versions:
+    - 3.12.2
+  - dependency-name: django-bootstrap4
+    versions:
+    - 2.3.1
+  - dependency-name: django-bootstrap3
+    versions:
+    - 14.2.0
